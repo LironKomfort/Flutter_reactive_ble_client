@@ -115,11 +115,11 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
         );
   }
 
-  void characteristicValueStream() {
-    _ble.characteristicValueStream.listen((event) {
-      print('characteristicValueStream $event.result');
-    });
-  }
+  // void characteristicValueStream() {
+  //   _ble.characteristicValueStream.listen((event) {
+  //     print('characteristicValueStream $event.result');
+  //   });
+  // }
 
   void subscribeCharacteristic(String deviceId) {
     final characteristic = QualifiedCharacteristic(
@@ -161,7 +161,8 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
         serviceId: serviceId,
         characteristicId: writeCharacteristicId,
         deviceId: deviceId);
-    await _ble.writeCharacteristicWithResponse(characteristic, value: [8]).then(
+    await _ble.writeCharacteristicWithResponse(characteristic,
+        value: [0xAD, 0xDE]).then(
       (value) => print('writeCharacteristic CB'),
     );
   }

@@ -22,7 +22,7 @@ class DeviceDetailScreen extends StatelessWidget {
                   connectionState: DeviceConnectionState.disconnected,
                   failure: null,
                 ),
-          connect: deviceConnector.connect,
+          connect: deviceConnector.connectToAdvertisingDevice,
           disconnect: deviceConnector.disconnect,
           clearGattCache: deviceConnector.clearGattCache,
           discoverServices: deviceConnector.discoverServices,
