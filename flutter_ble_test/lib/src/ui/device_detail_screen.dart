@@ -28,6 +28,7 @@ class DeviceDetailScreen extends StatelessWidget {
           discoverServices: deviceConnector.discoverServices,
           requestMTU: deviceConnector.requestMTU,
           subscribeCharacteristic: deviceConnector.subscribeCharacteristic,
+          subscribeCharacteristic2: deviceConnector.subscribeCharacteristic2,
           readCharacteristic: deviceConnector.readCharacteristic,
           writeCharacteristic: deviceConnector.writeCharacteristic,
         ),
@@ -44,6 +45,7 @@ class _DeviceDetail extends StatelessWidget {
     @required this.discoverServices,
     @required this.requestMTU,
     @required this.subscribeCharacteristic,
+    @required this.subscribeCharacteristic2,
     @required this.readCharacteristic,
     @required this.writeCharacteristic,
     Key key,
@@ -55,6 +57,7 @@ class _DeviceDetail extends StatelessWidget {
         assert(discoverServices != null),
         assert(requestMTU != null),
         assert(subscribeCharacteristic != null),
+        assert(subscribeCharacteristic2 != null),
         assert(readCharacteristic != null),
         assert(writeCharacteristic != null),
         super(key: key);
@@ -67,6 +70,7 @@ class _DeviceDetail extends StatelessWidget {
   final void Function(String deviceId) discoverServices;
   final void Function(String deviceId) requestMTU;
   final void Function(String deviceId) subscribeCharacteristic;
+  final void Function(String deviceId) subscribeCharacteristic2;
   final void Function(String deviceId) readCharacteristic;
   final void Function(String deviceId) writeCharacteristic;
 
@@ -190,6 +194,20 @@ class _DeviceDetail extends StatelessWidget {
                             ? () => subscribeCharacteristic(device.id)
                             : null,
                         child: const Text("Subscribe Notification"),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: _deviceConnected()
+                            ? () => subscribeCharacteristic2(device.id)
+                            : null,
+                        child: const Text("Subscribe Notification 2"),
                       ),
                     ),
                   ],

@@ -9,11 +9,9 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
   final FlutterReactiveBle _ble;
 
   final Uuid serviceId = Uuid.parse('06391ebb-4050-42b6-ab55-8282a15fa094');
-  final Uuid descriptorId = Uuid.parse('7385e060-b9a8-4853-848d-c70178b0e01e');
-  final Uuid readCharacteristicId =
-      Uuid.parse('010d815c-031c-4de8-ac10-1ffebcf874fa');
-  final Uuid writeCharacteristicId =
-      Uuid.parse('f2926f0f-336a-4502-9948-e4e8fd2316e9');
+  final Uuid readCharacteristicId = Uuid.parse('010d815c-031c-4de8-ac10-1ffebcf874fa');
+  final Uuid readCharacteristicId2 = Uuid.parse('1bc9f3e1-ad2c-4305-a855-f9f1b9bcef8b');
+  final Uuid writeCharacteristicId = Uuid.parse('f2926f0f-336a-4502-9948-e4e8fd2316e9');
 
   @override
   Stream<ConnectionStateUpdate> get state => _deviceConnectionController.stream;
@@ -22,23 +20,23 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
 
   StreamSubscription<ConnectionStateUpdate> _connection;
 
-  Future<void> connect(String deviceId) async {
-    if (_connection != null) {
-      await _connection.cancel();
-    }
-
-    _connection = _ble
-        .connectToDevice(
-          id: deviceId,
-          servicesWithCharacteristicsToDiscover: {
-            serviceId: [readCharacteristicId, writeCharacteristicId]
-          },
-          connectionTimeout: const Duration(seconds: 10),
-        )
-        .listen(
-          _deviceConnectionController.add,
-        );
-  }
+  // Future<void> connect(String deviceId) async {
+  //   if (_connection != null) {
+  //     await _connection.cancel();
+  //   }
+  //
+  //   _connection = _ble
+  //       .connectToDevice(
+  //         id: deviceId,
+  //         servicesWithCharacteristicsToDiscover: {
+  //           serviceId: [readCharacteristicId, readCharacteristicId2, writeCharacteristicId]
+  //         },
+  //         connectionTimeout: const Duration(seconds: 10),
+  //       )
+  //       .listen(
+  //         _deviceConnectionController.add,
+  //       );
+  // }
 
   Future<void> connectToAdvertisingDevice(String deviceId) async {
     if (_connection != null) {
@@ -115,12 +113,6 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
         );
   }
 
-  // void characteristicValueStream() {
-  //   _ble.characteristicValueStream.listen((event) {
-  //     print('characteristicValueStream $event.result');
-  //   });
-  // }
-
   void subscribeCharacteristic(String deviceId) {
     final characteristic = QualifiedCharacteristic(
         serviceId: serviceId,
@@ -129,10 +121,27 @@ class BleDeviceConnector extends ReactiveState<ConnectionStateUpdate> {
 
     _ble.subscribeToCharacteristic(characteristic).listen((data) {
       // code to handle incoming data
-      print('Data received $data');
+      print('Notification CB received');
+      printNotificationCB(data);
     }, onError: (dynamic error) {
       // code to handle errors
-      print('Subscribe error $error');
+      print('Notification error $error');
+    });
+  }
+
+  void subscribeCharacteristic2(String deviceId) {
+    final characteristic = QualifiedCharacteristic(
+        serviceId: serviceId,
+        characteristicId: readCharacteristicId2,
+        deviceId: deviceId);
+
+    _ble.subscribeToCharacteristic(characteristic).listen((data) {
+      // code to handle incoming data
+      print('Notification2 CB received');
+      printNotificationCB(data);
+    }, onError: (dynamic error) {
+      // code to handle errors
+      print('Notification2 error $error');
     });
   }
 
